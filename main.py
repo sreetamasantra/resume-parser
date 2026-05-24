@@ -1,12 +1,12 @@
+import json
 from src.extractor import extract_text
+from src.parser import parse_resume
 
 if __name__ == "__main__":
-    # Test with a sample resume
-    file_path = "data/sample_resumes/sample.pdf"  # change filename as needed
-    
-    print(f"Extracting text from: {file_path}\n")
+    file_path = "data/sample_resumes/sample.pdf"
+
+    print(f"Parsing resume: {file_path}\n")
     text = extract_text(file_path)
-    
-    print("=" * 50)
-    print(text[:1000])  # Print first 1000 chars to verify
-    print("=" * 50)
+    result = parse_resume(text)
+
+    print(json.dumps(result, indent=2))
