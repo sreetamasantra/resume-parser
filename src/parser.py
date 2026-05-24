@@ -35,29 +35,27 @@ def extract_name(text: str) -> str:
     return ""
 
 def extract_section(text: str, section_keywords: list, next_section_keywords: list) -> str:
-    """
-    Extract a section from resume text between two headings.
-    section_keywords: headings that start this section
-    next_section_keywords: headings that end this section
-    """
     lines = text.split('\n')
     capturing = False
     section_lines = []
 
     for line in lines:
-        line_upper = line.strip().upper()
+        stripped = line.strip()
+        line_upper = stripped.upper()
 
-        # Check if this line is the START of our target section
-        if any(kw in line_upper for kw in section_keywords):
+        # Only match heading if the ENTIRE line is the keyword (not mid-sentence)
+        is_heading = len(stripped.split()) <= 4 and any(kw in line_upper for kw in section_keywords)
+
+        if is_heading and not capturing:
             capturing = True
             continue
 
-        # Check if this line is the START of the next section (stop capturing)
-        if capturing and any(kw in line_upper for kw in next_section_keywords):
+        is_stop = len(stripped.split()) <= 4 and any(kw in line_upper for kw in next_section_keywords)
+        if capturing and is_stop:
             break
 
-        if capturing and line.strip():
-            section_lines.append(line.strip())
+        if capturing and stripped:
+            section_lines.append(stripped)
 
     return '\n'.join(section_lines)
 
@@ -81,11 +79,13 @@ def extract_education(text: str) -> str:
     )
 
 def extract_experience(text: str) -> str:
-    return extract_section(
+    result = extract_section(
         text,
-        section_keywords=["EXPERIENCE"],  # must match exactly, not SUMMARY
+        section_keywords=["EXPERIENCE"],
         next_section_keywords=["EDUCATION", "ADDITIONAL", "PROJECTS", "SKILL"]
     )
+    print("DEBUG EXPERIENCE FIRST LINE:", result.split('\n')[0])
+    return result
 
 #  Main Parser 
 
