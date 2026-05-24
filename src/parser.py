@@ -3,7 +3,7 @@ import spacy
 
 nlp = spacy.load("en_core_web_sm")
 
-# ─── Helpers ───────────────────────────────────────────────
+# Helpers 
 
 def extract_email(text: str) -> str:
     match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', text)
@@ -83,11 +83,11 @@ def extract_education(text: str) -> str:
 def extract_experience(text: str) -> str:
     return extract_section(
         text,
-        section_keywords=["EXPERIENCE"],
+        section_keywords=["EXPERIENCE"],  # must match exactly, not SUMMARY
         next_section_keywords=["EDUCATION", "ADDITIONAL", "PROJECTS", "SKILL"]
     )
 
-# ─── Main Parser ───────────────────────────────────────────
+#  Main Parser 
 
 def parse_resume(text: str) -> dict:
     return {

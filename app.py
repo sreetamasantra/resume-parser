@@ -4,7 +4,7 @@ import os
 from src.extractor import extract_text
 from src.parser import parse_resume
 
-# ─── Page Config ───────────────────────────────────────────
+# Page Config 
 st.set_page_config(
     page_title="Resume Parser",
     page_icon="📄",
@@ -14,7 +14,7 @@ st.set_page_config(
 st.title("📄 AI Resume Parser")
 st.markdown("Upload a resume in **PDF or DOCX** format to extract structured information.")
 
-# ─── File Upload ───────────────────────────────────────────
+# File Upload 
 uploaded_file = st.file_uploader("Upload Resume", type=["pdf", "docx"])
 
 if uploaded_file is not None:
@@ -28,7 +28,7 @@ if uploaded_file is not None:
             text = extract_text(temp_path)
             result = parse_resume(text)
 
-            # ─── Display Results ───────────────────────────
+            # Display Results 
             st.success("Resume parsed successfully!")
 
             col1, col2 = st.columns(2)
@@ -50,12 +50,16 @@ if uploaded_file is not None:
                     st.write("No skills found.")
 
             st.subheader("🎓 Education")
-            st.write(result['education'])
+            for line in result['education'].split('\\n'):
+                  if line.strip():
+                        st.write(line.strip())
 
             st.subheader("💼 Experience")
-            st.write(result['experience'])
+            for line in result['experience'].split('\\n'):
+                if line.strip():
+                    st.write(line.strip()) 
 
-            # ─── JSON Download ─────────────────────────────
+            # JSON Download 
             st.subheader("⬇️ Download Parsed JSON")
             json_str = json.dumps(result, indent=2)
             st.download_button(
@@ -65,7 +69,7 @@ if uploaded_file is not None:
                 mime="application/json"
             )
 
-            # ─── Raw JSON Preview ──────────────────────────
+            # Raw JSON Preview 
             with st.expander("View Raw JSON"):
                 st.json(result)
 
