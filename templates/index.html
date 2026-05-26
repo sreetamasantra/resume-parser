@@ -70,6 +70,38 @@
     </div>
 </div>
 
+<!-- Job Match Section -->
+<div class="card hidden" id="matchSection">
+    <h3>🎯 Job Match Analyzer</h3>
+    <p class="match-hint">Paste a job description below to see how well this resume matches.</p>
+    <textarea id="jobDesc" rows="6" placeholder="Paste job description here..."></textarea>
+    <button class="btn-parse" onclick="analyzeMatch()">Analyze Match</button>
+
+    <!-- Match Result -->
+    <div class="hidden" id="matchResult">
+        <div class="score-container">
+            <div class="score-circle" id="scoreCircle">
+                <span id="scoreValue">0%</span>
+            </div>
+            <div class="score-labels">
+                <p><strong>Match Score</strong></p>
+                <p id="scoreDetail"></p>
+            </div>
+        </div>
+
+        <div class="two-col" style="margin-top: 20px;">
+            <div>
+                <h4>✅ Matched Skills</h4>
+                <div class="skills-container" id="matchedSkills"></div>
+            </div>
+            <div>
+                <h4>❌ Missing Skills</h4>
+                <div class="skills-container" id="missingSkills"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="/static/script.js"></script>
 </body>
 </html>

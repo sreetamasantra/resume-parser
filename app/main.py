@@ -4,6 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.utils import extract_text
 from app.parser import parse_resume
+from app.matcher import match_resume_to_job
+from pydantic import BaseModel
 import shutil
 import os
 
@@ -41,4 +43,20 @@ async def upload_resume(file: UploadFile = File(...)):
         "data": parsed_data
     }
 
+class MatchRequest(BaseModel):
+    job_description: str
 
+@app.post("/match/{filename}")
+async def match_job(filename: str, request: MatchRequest):
+    file_path = os.path.join(UPLOAD_DIR, filename)
+    if not os.path.exists(file_path):
+        return {"error": "Resume not found. Please upload it first."}
+
+    raw_text = extract_text(file_path)
+    parsed   = parse_resume(raw_text)
+    result   = match_resume_to_job(parsed["skills"], request.job_description)
+
+    return {
+        "filename": filename,
+        "match":    result
+    }
