@@ -2,10 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Parser</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Resume Parser</h1>
-    <p>Upload endpoint is live at /upload</p>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>📄 Resume Parser</h1>
+        <p>Upload any resume (PDF or DOCX) to extract structured information instantly.</p>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-box" id="uploadBox">
+        <div class="upload-icon">⬆️</div>
+        <p>Drag & drop your resume here or</p>
+        <label for="fileInput" class="btn-upload">Choose File</label>
+        <input type="file" id="fileInput" accept=".pdf,.docx" hidden>
+        <p id="fileName" class="file-name">No file chosen</p>
+        <button class="btn-parse" id="parseBtn" onclick="uploadResume()">Parse Resume</button>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader hidden" id="loader">⏳ Parsing resume...</div>
+
+    <!-- Error -->
+    <div class="error hidden" id="errorBox"></div>
+
+    <!-- Result Dashboard -->
+    <div class="dashboard hidden" id="dashboard">
+
+        <!-- Profile Card -->
+        <div class="card profile-card">
+            <div class="avatar" id="avatarInitials"></div>
+            <div class="profile-info">
+                <h2 id="resName"></h2>
+                <p id="resEmail">📧 <span></span></p>
+                <p id="resPhone">📞 <span></span></p>
+                <div class="links">
+                    <a id="resLinkedin" href="#" target="_blank" class="link-btn hidden">🔗 LinkedIn</a>
+                    <a id="resGithub" href="#" target="_blank" class="link-btn hidden">🐙 GitHub</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="card">
+            <h3>🛠 Skills</h3>
+            <div class="skills-container" id="skillsList"></div>
+        </div>
+
+        <!-- Education & Experience -->
+        <div class="two-col">
+            <div class="card">
+                <h3>🎓 Education</h3>
+                <ul id="educationList"></ul>
+            </div>
+            <div class="card">
+                <h3>💼 Experience</h3>
+                <ul id="experienceList"></ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/script.js"></script>
 </body>
-</html> 
+</html>

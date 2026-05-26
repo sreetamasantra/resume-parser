@@ -21,6 +21,9 @@ def extract_from_pdf(file_path: str) -> str:
             page_text = page.extract_text()
             if page_text:
                 text += page_text + "\n"
+    
+    import re
+    text = re.sub(r'\(cid:\d+\)', '', text)
     return text.strip()
 
 
