@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.utils import extract_text
+from app.parser import parse_resume
 import shutil
 import os
 
@@ -27,17 +28,17 @@ async def upload_resume(file: UploadFile = File(...)):
     if file.content_type not in allowed_types:
         return {"error": "Only PDF and DOCX files are supported."}
 
-    # Save file
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Extract text
     raw_text = extract_text(file_path)
+    parsed_data = parse_resume(raw_text)
 
     return {
         "filename": file.filename,
-        "status": "extracted successfully",
-        "raw_text": raw_text[:500]  # Preview first 500 chars for now
+        "status": "parsed successfully",
+        "data": parsed_data
     }
+
 
