@@ -23,6 +23,7 @@ async def home(request: Request):
 
 @app.post("/upload")
 async def upload_resume(file: UploadFile = File(...)):
+    # Validate file type
     allowed_types = [
         "application/pdf",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -30,18 +31,29 @@ async def upload_resume(file: UploadFile = File(...)):
     if file.content_type not in allowed_types:
         return {"error": "Only PDF and DOCX files are supported."}
 
+    # Validate file size (max 5MB)
+    contents = await file.read()
+    if len(contents) > 5 * 1024 * 1024:
+        return {"error": "File too large. Maximum size is 5MB."}
+
+    # Save file
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        buffer.write(contents)
 
-    raw_text = extract_text(file_path)
-    parsed_data = parse_resume(raw_text)
-
-    return {
-        "filename": file.filename,
-        "status": "parsed successfully",
-        "data": parsed_data
-    }
+    # Extract and parse
+    try:
+        raw_text = extract_text(file_path)
+        parsed_data = parse_resume(raw_text)
+        return {
+            "filename": file.filename,
+            "status": "parsed successfully",
+            "data": parsed_data
+        }
+    except ValueError as e:
+        return {"error": str(e)}
+    except Exception as e:
+        return {"error": "An unexpected error occurred while parsing the resume."}
 
 class MatchRequest(BaseModel):
     job_description: str
